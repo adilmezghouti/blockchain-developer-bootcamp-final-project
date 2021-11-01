@@ -38,6 +38,7 @@ contract FamilyTrust {
   event LogUnlocked(address _address, string bucket);
   event LogFunded(address sender, address receiver, string bucket, uint newBalance);
   event LogUnfunded(address sender, string bucket);
+  event LogFundsReleased(address to, string bucket, uint amount);
   event LogAdminAdded(address sender, address admin);
   event LogAdminRemoved(address sender, address admin);
   event LogChildAdded(address sender, address child);
@@ -58,6 +59,11 @@ contract FamilyTrust {
     _;
   }
 
+  modifier enoughFunds(address _address, string memory _bucket) {
+    require(buckets[_address][_bucket].balance > 0, "Balance is not enough");
+    _;
+  }
+
   function addFunds(address _benefitor, string memory _bucket) public payable onlyAdmins() {
     buckets[_benefitor][_bucket] = Bucket({
       balance: msg.value,
@@ -66,8 +72,12 @@ contract FamilyTrust {
     emit LogFunded(msg.sender, _benefitor, _bucket, buckets[_benefitor][_bucket].balance);
   }
 
-  function transferFunds(string memory fromBucket, address to) public onlyAdmins() {
-
+  function releaseFunds(address payable _to, string memory _fromBucket) public onlyAdmins() enoughFunds(_to, _fromBucket) {
+    // emit LogFundsReleased(_to, _fromBucket, buckets[_to][_fromBucket].balance);
+    _to.transfer(buckets[_to][_fromBucket].balance);
+    uint oldBalance = buckets[_to][_fromBucket].balance;
+    buckets[_to][_fromBucket].balance = 0;
+    emit LogFundsReleased(_to, _fromBucket, oldBalance);
   }
 
   function lockFunds(string memory _bucket, address _benefitor) public onlyAdmins() {

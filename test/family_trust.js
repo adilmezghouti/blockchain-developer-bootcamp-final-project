@@ -1,10 +1,6 @@
 const FamilyTrust = artifacts.require("FamilyTrust");
+let BN = web3.utils.BN;
 
-/*
- * uncomment accounts to access the test accounts made available by the
- * Ethereum client
- * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
- */
 contract("FamilyTrust", function (accounts) {
   const [_owner, alice, bob] = accounts;
   let instance;
@@ -49,6 +45,16 @@ contract("FamilyTrust", function (accounts) {
       await instance.addFunds(bob, 'UNIVERSITY', { from: _owner, value: 10 });
       const bucketInfo = await instance.getBucketInfo(bob, 'UNIVERSITY');
       return assert.isTrue(bucketInfo.balance.toString() == '10', 'Benefitor is missing some money in her bucket');
+    })
+
+    it('should release funds', async () => {
+      await instance.addBenefitor(bob, 'bob', 'foo');
+      await instance.addFunds(bob, 'UNIVERSITY', { from: _owner, value: 10 });
+      const bobBalanceBefore = await web3.eth.getBalance(bob);
+      await instance.releaseFunds(bob, 'UNIVERSITY');
+      const bucketInfo = await instance.getBucketInfo(bob, 'UNIVERSITY');
+      const bobBalanceAfter = await web3.eth.getBalance(bob);
+      return assert.isTrue(bucketInfo.balance.toString() == '0' && new BN(bobBalanceAfter).sub(new BN(bobBalanceBefore)).toString() == '10', 'Benefitor should have 0 balance in the university bucket and 10 in the actual address');
     })
   })
 
