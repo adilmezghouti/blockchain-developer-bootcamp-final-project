@@ -41,7 +41,7 @@ function a11yProps(index) {
   };
 }
 
-export default function VerticalTabs({admin, benefitors, buckets}) {
+export default function VerticalTabs({admin, benefitors, buckets, contract}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -68,7 +68,7 @@ export default function VerticalTabs({admin, benefitors, buckets}) {
         <Admins />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Benefitors benefitors={benefitors} />
+        <Benefitors contract={contract} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Buckets />

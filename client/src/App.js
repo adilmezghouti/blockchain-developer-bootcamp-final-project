@@ -14,7 +14,6 @@ const App = () => {
   const [contract, setContract] = useState();
   const [owner, setOwner] = useState();
   const [selectedAddress, setSelectedAddress] = useState();
-  const [benefitors, setBenefitors] = useState();
 
   const init = async () => {
     try {
@@ -36,13 +35,6 @@ const App = () => {
         deployedNetwork && deployedNetwork.address,
       );
       setOwner(await instance.methods.owner().call())
-      const success = await instance.methods.addBenefitor(_accounts[0], 'Adam', 'Mezghouti').call();
-      console.log('success: ', success)
-      const response = await instance.methods.getBenefitors().call()
-      setBenefitors(response)
-      console.log('response: ', response);
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
       setContract(instance);
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -88,7 +80,7 @@ const App = () => {
           {owner ? <div>{owner}</div> : <Button variant={'outlined'} onClick={handleCreateTrustClick}>Create a Trust Fund</Button>}
         </div>
       </Box>
-      <VerticalTabs benefitors={benefitors} />
+      <VerticalTabs contract={contract} />
     </Container>
   );
 }
