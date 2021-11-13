@@ -27,6 +27,8 @@ contract FamilyTrust {
   mapping(address => mapping(string => Bucket)) buckets;
   constructor() public {
     owner = msg.sender;
+    benefitors = new address[](0);
+    admins = new address[](0);
     bucketTypes = [
       'UNIVERSITY',
       'ALLOWANCES',
@@ -50,7 +52,7 @@ contract FamilyTrust {
   }
 
   modifier onlyAdmins() {
-    require(accounts[msg.sender].role == Role.ADMIN, "Only admins can call this");
+    require(accounts[msg.sender].role == Role.ADMIN || msg.sender == owner, "Only admins can call this");
     _;
   }
 
@@ -102,7 +104,7 @@ contract FamilyTrust {
     accounts[_admin].enabled = false;
   }
 
-  function addBenefitor(address _benefitor, string memory _firstName, string memory _lastName) public onlyAdmins {    
+  function addBenefitor(address _benefitor, string memory _firstName, string memory _lastName) public onlyAdmins returns(bool) {
     benefitors.push(_benefitor);
     accounts[_benefitor] = Account({
       firstName: _firstName,
@@ -110,6 +112,8 @@ contract FamilyTrust {
       role: Role.USER,
       enabled: true
     });
+
+    return true;
   }
 
   function removeBenefitor(address _benefitor) public onlyAdmins {
@@ -158,6 +162,23 @@ contract FamilyTrust {
       enabled,
       balance,
       locked
+    );
+  }
+
+  function getBenefitors() public view returns(
+    address benefitor1,
+    address benefitor2,
+    address benefitor3,
+    uint len) {
+    len = benefitors.length;
+    if (benefitors.length > 0) benefitor1 = benefitors[0];
+    if (benefitors.length > 1) benefitor2 = benefitors[1];
+    if (benefitors.length > 2) benefitor3 = benefitors[2];
+    return (
+      benefitor1,
+      benefitor2,
+      benefitor3,
+      len
     );
   }
 }

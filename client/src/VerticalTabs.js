@@ -21,7 +21,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -41,7 +41,7 @@ function a11yProps(index) {
   };
 }
 
-export default function VerticalTabs() {
+export default function VerticalTabs({admin, benefitors, buckets}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -68,7 +68,7 @@ export default function VerticalTabs() {
         <Admins />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Benefitors />
+        <Benefitors benefitors={benefitors} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Buckets />
