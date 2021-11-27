@@ -1,17 +1,27 @@
 import {useWeb3React} from "@web3-react/core";
 import React, {Fragment, useEffect, useState} from "react";
 import Web3 from "web3";
-import {CardActions, CardContent, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import {CardActions, CardContent, FormControl, Icon, IconButton, InputLabel, MenuItem, Select} from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import {Fingerprint, Lock, LockOpen} from "@mui/icons-material";
 
 const GAS_AMOUNT = 3000000
-const colors = {
-  UNIVERSITY: '#e91e63',
-  ALLOWANCES: '#1976d2',
-  INHERITANCE: '#10797A'
+const BucketMetaData = {
+  UNIVERSITY: {
+    color: '#e91e63',
+    icon: 'school'
+  },
+  ALLOWANCES: {
+    color: '#1976d2',
+    icon: 'savings'
+  },
+  INHERITANCE: {
+    color: '#10797A',
+    icon: 'attach_money'
+  }
 }
 
 const BenefitorRow = ({contract, address, actionEnabled}) => {
@@ -22,6 +32,7 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
   const [balances, setBalances] = useState([])
   const [totalBalance, setTotalBalance] = useState(Web3.utils.toBN(0))
   const [selectedBucket, setSelectedBucket] = useState("UNIVERSITY")
+  const [areFundsLocked, setAreFundsLocked] = useState(false)
 
   const handleAddFunds = async () => {
     if (parseFloat(amount) === 0) setError('Invalid amount')
@@ -48,9 +59,10 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
     let total = Web3.utils.toBN(0)
 
     for (const bucket of ['UNIVERSITY', 'ALLOWANCES', 'INHERITANCE']) {
-      const {balance} = await contract.methods.getBucketInfo(address, bucket).call()
+      const {balance, locked} = await contract.methods.getBucketInfo(address, bucket).call()
       buckets.push({bucket, balance: Web3.utils.fromWei(balance)})
       total = total.add(Web3.utils.toBN(balance))
+      setAreFundsLocked(locked)
     }
 
     setBalances(buckets)
@@ -74,20 +86,27 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
     {!!error && <div style={{color: '#e91e63', fontWeight: 'bold', marginBottom: 10}}>{error}</div>}
     <CardContent>
       <Box sx={{ display: 'flex', alignItems: 'center', pr: 1, mb: 1 }}>
-        <Typography variant="h5" component="div" sx={{marginRight: 5 }}>
+        <Typography variant="h4" component="div" sx={{marginRight: 5 }}>
           {name.trim().length > 0 ? name : 'Not Assigned'}
         </Typography>
-        <Typography variant="h5" component="div">
+        <Typography variant="h4" component="div">
           {Web3.utils.fromWei(totalBalance)} ETH
         </Typography>
+        <IconButton aria-label="fingerprint" color="secondary" sx={{ml: 1}}>
+          {areFundsLocked ? <Lock /> : <LockOpen /> }
+        </IconButton>
       </Box>
       <Typography sx={{ fontSize: 14, mb: 1 }} color="text.secondary" gutterBottom>
         {address}
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', pb: 1 }}>
-        {balances.map(({bucket, balance}) => <Typography key={`${name}-${bucket}`} sx={{ fontSize: 14, fontWeight: "700", marginRight: 5 }} color={colors[bucket]} gutterBottom>
-          {balance} ETH
-        </Typography>)}
+        {balances.map(({bucket, balance}) =>
+          <Fragment style={{borderColor: '#000', borderWidth: 1}} >
+            <Icon color={BucketMetaData[bucket].color} sx={{color: BucketMetaData[bucket].color, pb:1, mr: 0.5, fontSize: 20, lineHeight: '20px' }}>{BucketMetaData[bucket].icon}</Icon>
+            <Typography key={`${name}-${bucket}`} sx={{ fontSize: 20, fontWeight: "700", marginRight: 5, lineHeight: '20px' }} color={BucketMetaData[bucket].color} gutterBottom>
+              {balance} ETH
+            </Typography>
+          </Fragment>)}
       </Box>
       {actionEnabled && <CardActions>
         <TextField label="Amount" value={amount} onChange={onChange} variant="outlined" size="small" style={{marginLeft: 10}} />
