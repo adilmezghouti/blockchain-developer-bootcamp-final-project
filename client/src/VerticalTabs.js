@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Buckets from './Buckets';
 import Admins from './Admins';
@@ -41,7 +40,7 @@ function a11yProps(index) {
   };
 }
 
-export default function VerticalTabs({admin, benefitors, buckets, contract}) {
+export default function VerticalTabs() {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -68,7 +67,7 @@ export default function VerticalTabs({admin, benefitors, buckets, contract}) {
         <Admins />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Benefitors contract={contract} />
+        <Benefitors />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Buckets />

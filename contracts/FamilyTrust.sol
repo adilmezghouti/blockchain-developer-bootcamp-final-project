@@ -138,6 +138,7 @@ contract FamilyTrust {
       enabled
     );
   }
+
   function getBucketTypes() public view returns(string[] memory) {
     return bucketTypes;
   }
