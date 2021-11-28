@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {Lock, LockOpen} from "@mui/icons-material";
+import AddressBlock from "./AddressBlock";
 
 const GAS_AMOUNT = 3000000
 const BucketMetaData = {
@@ -90,8 +91,8 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
 
   return <Fragment>
     {!!error && <div style={{color: '#e91e63', fontWeight: 'bold', marginBottom: 10}}>{error}</div>}
-    <CardContent>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1, mb: 1 }}>
+    <CardContent sx={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1}}>
         <Typography variant="h4" component="div" sx={{marginRight: 5 }}>
           {name.trim().length > 0 ? name : 'Not Assigned'}
         </Typography>
@@ -102,9 +103,7 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
           {enabled ? <LockOpen /> : <Lock /> }
         </IconButton>
       </Box>
-      <Typography sx={{ fontSize: 14, mb: 1 }} color="text.secondary" gutterBottom>
-        {address}
-      </Typography>
+      <AddressBlock address={address} />
       <Box sx={{ display: 'flex', alignItems: 'center', pb: 1 }}>
         {balances.map(({bucket, balance}) =>
           <Fragment key={`${name}-${bucket}`}>

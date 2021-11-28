@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import {Card, CardContent, IconButton} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {Lock, LockOpen} from "@mui/icons-material";
+import AddressBlock from "./AddressBlock";
 
 const GAS_AMOUNT = 3000000
 
@@ -138,17 +139,15 @@ const Admins = () => {
     {admins.map((admin, idx) =>
       <Card key={`${admin.address}-${idx}`} variant="outlined" sx={{mb: 2}}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1, mb: 1 }}>
-            <Typography variant="h4" component="div" sx={{marginRight: 5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="h4" component="div">
               {admin.firstName.trim().length > 0 ? `${admin.firstName} ${admin.lastName}` : 'Not Assigned'}
             </Typography>
-            <IconButton aria-label="fingerprint" color="secondary" sx={{ml: 1}} onClick={() => toggleAccountAccess(admin.address, !admin.enabled)}>
+            <IconButton aria-label="fingerprint" color="secondary" onClick={() => toggleAccountAccess(admin.address, !admin.enabled)}>
               {admin.enabled ? <LockOpen /> : <Lock /> }
             </IconButton>
           </Box>
-          <Typography sx={{ fontSize: 14, mb: 1 }} color="text.secondary" gutterBottom>
-            {admin.address}
-          </Typography>
+          <AddressBlock address={admin.address} />
         </CardContent>
       </Card>)}
   </div>
