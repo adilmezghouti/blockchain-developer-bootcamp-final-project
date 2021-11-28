@@ -125,9 +125,17 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
             onChange={handleBucketChange}
             fullWidth
           >
-            <MenuItem value="UNIVERSITY">University</MenuItem>
-            <MenuItem value="ALLOWANCES">Allowances</MenuItem>
-            <MenuItem value="INHERITANCE">Inheritance</MenuItem>
+            <MenuItem value="UNIVERSITY" sx={{alignItems: 'center'}}>
+              <Icon color={BucketMetaData['UNIVERSITY'].color} sx={{color: BucketMetaData['UNIVERSITY'].color, mr: 0.5, fontSize: 15}}>{BucketMetaData['UNIVERSITY'].icon}</Icon>
+              University</MenuItem>
+            <MenuItem value="ALLOWANCES">
+              <Icon color={BucketMetaData['ALLOWANCES'].color} sx={{color: BucketMetaData['ALLOWANCES'].color, mr: 0.5, fontSize: 15}}>{BucketMetaData['ALLOWANCES'].icon}</Icon>
+              Allowances
+            </MenuItem>
+            <MenuItem value="INHERITANCE">
+              <Icon color={BucketMetaData['INHERITANCE'].color} sx={{color: BucketMetaData['INHERITANCE'].color, mr: 0.5, fontSize: 15}}>{BucketMetaData['INHERITANCE'].icon}</Icon>
+              Inheritance
+            </MenuItem>
           </Select>
         </FormControl>
         <Button variant={'outlined'} size="small" onClick={handleAddFunds} sx={{p: 1}}>Submit</Button>
