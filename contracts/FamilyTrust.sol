@@ -66,7 +66,12 @@ contract FamilyTrust {
     _;
   }
 
-  function addFunds(address _benefitor, string memory _bucket) public payable onlyAdmins() {
+  modifier accountEnabled(address _address) {
+    require(accounts[_address].enabled, "Account is disabled");
+    _;
+  }
+
+  function addFunds(address _benefitor, string memory _bucket) public payable accountEnabled(_benefitor) {
     buckets[_benefitor][_bucket] = Bucket({
       balance: msg.value,
       locked: false
@@ -117,7 +122,11 @@ contract FamilyTrust {
   }
 
   function removeBenefitor(address _benefitor) public onlyAdmins {
-    accounts[_benefitor].enabled = false;
+    delete accounts[_benefitor];
+  }
+
+  function toggleAccountAccess(address _address, bool hasAccess) public onlyOwner {
+    accounts[_address].enabled = hasAccess;
   }
 
   function getAccountInfo(address _address) public view returns(
@@ -149,7 +158,6 @@ contract FamilyTrust {
     bool enabled,
     uint balance,
     bool locked
-
   ) {
     firstName = accounts[_address].firstName;
     lastName = accounts[_address].lastName;
@@ -180,6 +188,40 @@ contract FamilyTrust {
       benefitor2,
       benefitor3,
       len
+    );
+  }
+
+  function getAdmins() public view returns(
+    address admin1,
+    address admin2,
+    address admin3,
+    uint len) {
+    len = admins.length;
+    if (admins.length > 0) admin1 = admins[0];
+    if (admins.length > 1) admin2 = admins[1];
+    if (admins.length > 2) admin3 = admins[2];
+
+    return (
+      admin1,
+      admin2,
+      admin3,
+      len
+    );
+  }
+
+  function getAdminInfo(address _address) public view returns(
+    string memory firstName,
+    string memory lastName,
+    bool enabled
+  ) {
+    firstName = accounts[_address].firstName;
+    lastName = accounts[_address].lastName;
+    enabled = accounts[_address].enabled;
+
+    return (
+      firstName,
+      lastName,
+      enabled
     );
   }
 }

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import Buckets from './Buckets';
 import Admins from './Admins';
 import Benefitors from './Benefitors';
 
@@ -19,7 +18,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ pl: 3 }}>
           {children}
         </Box>
       )}
@@ -61,16 +60,12 @@ export default function VerticalTabs() {
       >
         <Tab label="Admins" {...a11yProps(0)} />
         <Tab label="Benefitors" {...a11yProps(1)} />
-        <Tab label="Buckets" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <Admins />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Benefitors />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <Buckets />
       </TabPanel>
     </Box>
   );

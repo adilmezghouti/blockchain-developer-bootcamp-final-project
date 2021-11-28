@@ -114,7 +114,7 @@ const Benefitors= () => {
 
     {Object.keys(benefitors)
       .filter(key => key.startsWith('benefitor') )
-      .map(key => <Card key={key} variant="outlined" sx={{mb: 2}}> <BenefitorRow label={key} address={benefitors[key]} actionEnabled={isAddFundsEnabled} contract={contract} /></Card>)}
+      .map(key => <Card key={key} variant="outlined" sx={{mb: 2}}> <BenefitorRow key={key} label={key} address={benefitors[key]} actionEnabled={isAddFundsEnabled} contract={contract} /></Card>)}
   </div>
 }
 
