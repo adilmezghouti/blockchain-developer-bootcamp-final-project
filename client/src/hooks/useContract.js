@@ -13,15 +13,20 @@ export function useContract(contractJson) {
   useEffect(() => {
     const {ethereum} = window
     const web3 = new Web3(ethereum);
-    const _address = contractJson.networks[chainId]?.address;
-    if (_address) {
-      setAddress(_address)
-      setInstance(new web3.eth.Contract(contractJson.abi, _address));
-    } else {
-      setError('No Trust Fund account found.')
-      setAddress('');
-      setInstance(undefined);
-    }
+
+    web3.eth.net.getId().then(networkId => {
+      const _address = contractJson.networks[networkId]?.address;
+      console.log('--->', networkId, chainId, library.networkId)
+      if (_address) {
+        setAddress(_address)
+        setInstance(new web3.eth.Contract(contractJson.abi, _address));
+      } else {
+        setError('No Trust Fund account found.')
+        setAddress('');
+        setInstance(undefined);
+      }
+    })
+
   }, [contractJson, chainId])
 
 
