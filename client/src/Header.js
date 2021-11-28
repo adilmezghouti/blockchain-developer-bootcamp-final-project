@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import {useContract} from "./hooks/useContract";
 
 const Header = () => {
+  const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
   const {account, library} = useWeb3React()
   const {contract, address: contractAddress} = useContract(FamilyTrustContract)
   const [accountBalance, setAccountBalance] = useState(0);
@@ -62,8 +63,11 @@ const Header = () => {
     </div>
     <div style={{marginBottom: '10px'}}>
       <div style={{fontWeight: 'bold', marginBottom: 10}}>Smart Contract</div>
-      <div>Address: {contractAddress}</div>
-      <div>Balance: {contractBalance} ETH</div>
+      {!!contractAddress && contractAddress !== ZERO_ADDRESS ? <>
+        <div>Address: {contractAddress}</div>
+        <div>Balance: {contractBalance} ETH</div>
+      </> : <div>You need to to create a Trust Fund</div>
+      }
     </div>
   </Box>
 }

@@ -2,15 +2,18 @@ import React, {useEffect} from "react";
 import Container from "@mui/material/Container";
 import Header from "./Header";
 import {useWeb3React} from "@web3-react/core";
-import {InjectedConnector} from "@web3-react/injected-connector";
 import VerticalTabs from "./VerticalTabs";
+import {injected} from "./connectors";
+import useInactiveListener from "./hooks/useInactiveListener";
+import useEagerConnect from "./hooks/useEagerConnect";
 
 const Main = () => {
   const { active, error, activate  } = useWeb3React();
-  const connector = new InjectedConnector({ supportedChainIds: [1, 3, 4, 42, 1337] });
+  const triedEager = useEagerConnect()
+  useInactiveListener(!triedEager);
 
   useEffect(() => {
-    activate(connector)
+    activate(injected)
   }, [])
 
   if (!active && !error) {
