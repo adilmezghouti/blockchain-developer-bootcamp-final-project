@@ -128,7 +128,7 @@ const Header = () => {
           </div>
       </> :
       <Typography variant="h6" component="div" sx={{marginRight: 5, color: '#e91e63' }}>
-        You need to to create a Trust Fund
+        Smart Contract not found
       </Typography>
       }
     </Box>

@@ -87,7 +87,7 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
     }
 
     getBuckets()
-  }, [address])
+  }, [address, contract])
 
   return <Fragment>
     {!!error && <div style={{color: '#e91e63', fontWeight: 'bold', marginBottom: 10}}>{error}</div>}

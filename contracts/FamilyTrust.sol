@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.16 <0.9.0;
+pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract FamilyTrust {
-  address public owner;
+///@title Allows families to deposit, lock, unlock, and release funds for the benefits of their children.
+///@author Adil Mezghouti
+contract FamilyTrust is Ownable {
   address[] public admins;
   address[] public benefitors;
   enum Role {
@@ -22,11 +24,10 @@ contract FamilyTrust {
     Role role;
     bool enabled;
   }
-
   mapping(address => Account) accounts;
   mapping(address => mapping(string => Bucket)) buckets;
-  constructor() public {
-    owner = msg.sender;
+
+  constructor() {
     benefitors = new address[](0);
     admins = new address[](0);
     bucketTypes = [
@@ -46,13 +47,8 @@ contract FamilyTrust {
   event LogChildAdded(address sender, address child);
   event LogChildRemoved(address sender, address child);
 
-  modifier onlyOwner() {
-    require(msg.sender == owner, "Only owners can call this");
-    _;
-  }
-
   modifier onlyAdmins() {
-    require(accounts[msg.sender].role == Role.ADMIN || msg.sender == owner, "Only admins can call this");
+    require(accounts[msg.sender].role == Role.ADMIN, "Only admins can call this");
     _;
   }
 
@@ -71,6 +67,9 @@ contract FamilyTrust {
     _;
   }
 
+  ///@param _benefitor the address of the person who will be the recipient of the deposited funds
+  ///@param _bucket the name of the bucket in which the funds will be deposited
+  ///@notice Note that the funds will be assigned logically through buckets and will not be effectively owned by the benefitor until the admin/owner releases the funds to her
   function addFunds(address _benefitor, string memory _bucket) public payable accountEnabled(_benefitor) {
     buckets[_benefitor][_bucket] = Bucket({
       balance: msg.value,
@@ -80,7 +79,6 @@ contract FamilyTrust {
   }
 
   function releaseFunds(address payable _to, string memory _fromBucket) public onlyAdmins() enoughFunds(_to, _fromBucket) {
-    // emit LogFundsReleased(_to, _fromBucket, buckets[_to][_fromBucket].balance);
     _to.transfer(buckets[_to][_fromBucket].balance);
     uint oldBalance = buckets[_to][_fromBucket].balance;
     buckets[_to][_fromBucket].balance = 0;
@@ -95,7 +93,7 @@ contract FamilyTrust {
     buckets[_benefitor][_bucket].locked = false;
   }
 
-  function addAdmin(address _admin, string memory _firstName, string memory _lastName) public onlyOwner() {
+  function addAdmin(address _admin, string memory _firstName, string memory _lastName) public onlyOwner {
     admins.push(_admin);
     accounts[_admin] = Account({
       firstName: _firstName,
@@ -105,7 +103,7 @@ contract FamilyTrust {
     });
   }
 
-  function removeAdmin(address _admin) public onlyOwner() {    
+  function removeAdmin(address _admin) public onlyOwner {
     accounts[_admin].enabled = false;
   }
 

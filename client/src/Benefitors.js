@@ -5,10 +5,11 @@ import TextField from "@mui/material/TextField";
 import {useWeb3React} from "@web3-react/core";
 import {useContract} from "./hooks/useContract";
 import FamilyTrustContract from "./contracts/FamilyTrust.json";
-import {Card} from "@mui/material";
+import {Card, Typography} from "@mui/material";
 import BenefitorRow from "./BenefitorRow";
 
 const GAS_AMOUNT = 3000000
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 const Benefitors= () => {
   const {account} = useWeb3React()
@@ -112,9 +113,11 @@ const Benefitors= () => {
       <Button variant={'outlined'} size="large" onClick={handleCreateBenefitor} style={{paddingBottom: '14px', paddingTop: '14px'}}>Submit</Button>
     </Box>}
 
-    {Object.keys(benefitors)
+    {contract && contract !== ZERO_ADDRESS  ? Object.keys(benefitors)
       .filter(key => key.startsWith('benefitor') )
-      .map(key => <Card key={key} variant="outlined" sx={{mb: 2}}> <BenefitorRow key={key} label={key} address={benefitors[key]} actionEnabled={isAddFundsEnabled} contract={contract} /></Card>)}
+      .map(key => <Card key={key} variant="outlined" sx={{mb: 2}}> <BenefitorRow key={key} label={key} address={benefitors[key]} actionEnabled={isAddFundsEnabled} contract={contract} /></Card>) :
+      <Typography variant="h6" color='#e91e63'>Make sure to create your Trust Fund first</Typography>
+    }
   </div>
 }
 
