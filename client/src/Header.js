@@ -73,7 +73,7 @@ const Header = () => {
           Role:
         </Typography>
         <Typography variant="body1" component="div" sx={{marginRight: 5 }}>
-          {owner === account ? 'Owner/Admin' : 'Benefitor'}
+          {owner === account ? 'Owner/Admin' : 'Benefitor (Limited access)'}
         </Typography>
       </div>
       <AddressBlock address={account} />
