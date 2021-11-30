@@ -22,7 +22,7 @@ const AddressBlock = ({address}) => {
     window.getSelection().removeAllRanges();
   }
 
-  return <div style={{display: 'flex', flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
+  return <div style={{display: 'flex', flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
     <Typography variant="body1" component="div" sx={{marginRight: 5 }}>
       Address:
     </Typography>

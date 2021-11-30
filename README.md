@@ -35,8 +35,8 @@ Here are the technologies used in this project:
 To set up the smart contract part follow the following steps:
 - Install dependencies: npm install
 - Rename .env.local to .env and populate it with the right values
-- Run ganache: ganache-cli
-- Run tests: truffle test --network development
+- Run ganache: ganache-cli -m PUT_MNEMONIC_VALUE_FROM_DOT_ENV_HERE
+- Run tests: truffle test --network development //This requires Ganache to be already running
 - Compile the smart contract:  truffle compile --all
 - Deploy the smart contract: truffle migrate --reset
 
@@ -50,11 +50,17 @@ In order to deploy the smart contract to Ropsten:
 - Access the dapp at: http://localhost:3000/
 
 ##Unit Tests
-- Unit Tests: descrive what the unit tests are covering
+The battery of unit tests in place target the following pieces of functionality:
+- Make sure the contract is deployed
+- Contract Ownership
+- Read, add admins
+- Read, add users/benefitors
+- Read and add fund buckets
+- Read, add, and release funds
 
 ## See the dapp in action
 - The dapp is deployed to IPFS using Fleek. You can access it here: https://white-recipe-7476.on.fleek.co/
 - A screencast of you walking through your project
 
 ##Public Ethereum account:
-- My address for the NFT certificate: 0x1f49F22879C323514Fd6fe069A20d381E432Eb11
+- My address for the NFT certificate: 0xF35Efa0f39270358687f896487bdE4F90b5fC933

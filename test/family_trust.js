@@ -9,7 +9,7 @@ contract("FamilyTrust", function (accounts) {
     instance = await FamilyTrust.new();
   })
 
-  describe('Use cases', () => {
+  describe('FamilyTrust Unit Tests', () => {
     it("should assert true", async function () {
       await FamilyTrust.deployed();
       return assert.isTrue(true);

@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.10;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 ///@title Allows families to deposit, lock, unlock, and release funds for the benefits of their children.
 ///@author Adil Mezghouti
-contract FamilyTrust is Ownable {
+contract FamilyTrust is Ownable, ReentrancyGuard {
   address[] public admins;
   address[] public benefitors;
   enum Role {
@@ -23,6 +24,7 @@ contract FamilyTrust is Ownable {
     string lastName;
     Role role;
     bool enabled;
+    bool exists;
   }
   mapping(address => Account) accounts;
   mapping(address => mapping(string => Bucket)) buckets;
@@ -67,6 +69,12 @@ contract FamilyTrust is Ownable {
     _;
   }
 
+  modifier existingAccount(address _address) {
+    require(accounts[_address].exists, 'Account not found');
+    _;
+  }
+
+  ///@notice Adds funds to the smart contract and associate them to a specific bucket
   ///@param _benefitor the address of the person who will be the recipient of the deposited funds
   ///@param _bucket the name of the bucket in which the funds will be deposited
   ///@notice Note that the funds will be assigned logically through buckets and will not be effectively owned by the benefitor until the admin/owner releases the funds to her
@@ -78,14 +86,18 @@ contract FamilyTrust is Ownable {
     emit LogFunded(msg.sender, _benefitor, _bucket, buckets[_benefitor][_bucket].balance);
   }
 
-  function releaseFunds(address payable _to, string memory _fromBucket) public onlyAdmins() enoughFunds(_to, _fromBucket) {
-    _to.transfer(buckets[_to][_fromBucket].balance);
+  ///@notice Moves the amount associated with a specific bucket to the provided address
+  ///@param _to the address receiving the funds
+  ///@param _fromBucket the bucket to which the funds are associated
+  function releaseFunds(address payable _to, string memory _fromBucket) public onlyAdmins existingAccount(_to) enoughFunds(_to, _fromBucket) nonReentrant {
     uint oldBalance = buckets[_to][_fromBucket].balance;
     buckets[_to][_fromBucket].balance = 0;
+    (bool success, ) = _to.call{value: oldBalance}("");
+    require(success, "Transfer failed");
     emit LogFundsReleased(_to, _fromBucket, oldBalance);
   }
 
-  function lockFunds(string memory _bucket, address _benefitor) public onlyAdmins() {
+  function lockFunds(string memory _bucket, address _benefitor) public onlyAdmins {
     buckets[_benefitor][_bucket].locked = true;
   }
 
@@ -99,7 +111,8 @@ contract FamilyTrust is Ownable {
       firstName: _firstName,
       lastName: _lastName,
       role: Role.ADMIN,
-      enabled: true
+      enabled: true,
+      exists: true
     });
   }
 
@@ -113,7 +126,8 @@ contract FamilyTrust is Ownable {
       firstName: _firstName,
       lastName: _lastName,
       role: Role.USER,
-      enabled: true
+      enabled: true,
+      exists: true
     });
 
     return true;
