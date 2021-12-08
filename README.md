@@ -22,10 +22,13 @@ Here are some features that can be added in the future:
 - Use NFTs and tokens to reward children
 - Transfer ownership of the contract when the owner passes away
 
-##Instructions:
+##Project Setup Instructions:
 There are two different component to this project: the smart contract and the dapp (front-end).
 
-Here are the technologies used in this project:
+###Requirements
+This project uses the following technologies:
+- Node js
+- npm or yarn
 - Truffle
 - Ganache
 - React js

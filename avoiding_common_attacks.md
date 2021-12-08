@@ -1,6 +1,7 @@
 #Solidity Pitfalls and Attacks
 - Using Specific Compiler Pragma: Used ^0.8.10 to make sure the is stable and benefit from any new patches 
-- Use Modifiers Only for Validation
+- Used Modifiers Only for Validation
+- Used Requires to check if if a transfer went through
 - Proper use of .call and .delegateCall
 
 Not used yet:
@@ -9,7 +10,7 @@ Not used yet:
 - Pull Over Push (Prioritize receiving contract calls over making contract calls)
 
 #Smart Contract Pitfalls and Attacks
-- Re-entrancy: Use openzeppelin ReentrancyGuard
+- SWC-107 (Re-entrancy): Used openzeppelin ReentrancyGuard
 - Timestamp Dependence
 - Forcibly Sending Ether
 - Tx.Origin Authentication
