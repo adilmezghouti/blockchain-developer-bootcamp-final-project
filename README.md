@@ -1,5 +1,5 @@
 # Family Trust
-##Introduction
+## Introduction
 This contract product allows parents and guardians to set up a family trust to help secure the future of their children.
 
 So far users can do the following things:
@@ -13,7 +13,7 @@ So far users can do the following things:
   - Add, enable, disable admins
   - Add, enable, disable benefitors/users
 
-##Future Requirements
+## Future Requirements
 Here are some features that can be added in the future:
 - Use Hashed Time Lock Contracts to unlock funds in a given back
 - Only allow the people in the contract to access/view the dapp.
@@ -22,10 +22,10 @@ Here are some features that can be added in the future:
 - Use NFTs and tokens to reward children
 - Transfer ownership of the contract when the owner passes away
 
-##Project Setup Instructions:
+## Project Setup Instructions:
 There are two different component to this project: the smart contract and the dapp (front-end).
 
-###Requirements
+### Requirements
 This project uses the following technologies:
 - Node js
 - npm or yarn
@@ -34,7 +34,7 @@ This project uses the following technologies:
 - React js
 - Solidity
 
-###Smart Contract:
+### Smart Contract:
 To set up the smart contract part follow the following steps:
 - Install dependencies: npm install
 - Rename .env.local to .env and populate it with the right values
@@ -46,13 +46,13 @@ To set up the smart contract part follow the following steps:
 In order to deploy the smart contract to Ropsten:
 - truffle migrate --network ropsten
 
-###Dapp / Font-end:
+### Dapp / Font-end:
 - Change directories to client
 - Install dependencies: npm install
 - Run the dapp: npm run start
 - Access the dapp at: http://localhost:3000/
 
-##Unit Tests
+## Unit Tests
 The battery of unit tests in place target the following pieces of functionality:
 - Make sure the contract is deployed
 - Contract Ownership
@@ -65,5 +65,5 @@ The battery of unit tests in place target the following pieces of functionality:
 - The dapp is deployed to IPFS using Fleek. You can access it here: https://white-recipe-7476.on.fleek.co/
 - A screencast of you walking through your project
 
-##Public Ethereum account:
+## Public Ethereum account:
 - My address for the NFT certificate: 0xF35Efa0f39270358687f896487bdE4F90b5fC933
