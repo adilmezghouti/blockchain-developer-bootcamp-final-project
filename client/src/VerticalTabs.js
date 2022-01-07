@@ -58,14 +58,14 @@ export default function VerticalTabs() {
         aria-label="Vertical tabs example"
         sx={{ borderRight: 1, borderColor: 'divider' }}
       >
-        <Tab label="Admins" {...a11yProps(0)} />
-        <Tab label="Benefitors" {...a11yProps(1)} />
+        <Tab label="Benefitors" {...a11yProps(0)} />
+        <Tab label="Admins" {...a11yProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <Admins />
+        <Benefitors />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Benefitors />
+        <Admins />
       </TabPanel>
     </Box>
   );

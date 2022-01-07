@@ -26,7 +26,7 @@ const BucketMetaData = {
 }
 
 const BenefitorRow = ({contract, address, actionEnabled}) => {
-  const {account} = useWeb3React()
+  const {account, library} = useWeb3React()
   const [error, setError] = useState('')
   const [amount, setAmount] = useState(0)
   const [name, setName] = useState('')
@@ -35,6 +35,7 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
   const [totalBalance, setTotalBalance] = useState(Web3.utils.toBN(0))
   const [selectedBucket, setSelectedBucket] = useState("UNIVERSITY")
   const [areFundsLocked, setAreFundsLocked] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const toggleAccountAccess = async (_address, hasAccess) => {
     const {status} = await contract.methods.toggleAccountAccess(_address, hasAccess).send({from: account, gas: GAS_AMOUNT});
@@ -45,11 +46,18 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
     if (parseFloat(amount) === 0) setError('Invalid amount')
     setError('')
 
+    setLoading(true)
     const response = await contract.methods.addFunds(address, selectedBucket).send({from: account, gas: GAS_AMOUNT, value: Web3.utils.toWei(amount, "ether")});
-    if (response.status) {
-      setAmount(0)
-    } else {
+    if (!response.status) {
       setError('Transaction Failed. Please try again!')
+    } else {
+      library.once(response.transactionHash, () => {
+        //For simplicity we will only wait for one block
+        getBuckets().then(() => {
+          setLoading(false)
+        })
+      })
+      setAmount(0)
     }
   }
 
@@ -138,7 +146,7 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
             </MenuItem>
           </Select>
         </FormControl>
-        <Button variant={'outlined'} size="small" onClick={handleAddFunds} sx={{p: 1}}>Submit</Button>
+        <Button variant={'outlined'} size="small" onClick={handleAddFunds} sx={{p: 1}}>{loading ? 'Processing...' : 'Submit'}</Button>
       </CardActions> }
     </CardContent>
   </Fragment>

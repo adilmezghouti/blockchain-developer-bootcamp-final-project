@@ -16,14 +16,13 @@ const Header = () => {
   const [accountBalance, setAccountBalance] = useState(0);
   const [owner, setOwner] = useState();
   const [contractBalance, setContractBalance] = useState()
-  const [shouldLengthenAddress, setShouldLengthenAddress] = useState('')
 
-  useEffect(() => {
-    if (library) library.getBalance(account).then(balance => {
+  const refreshInfo = () => {
+    library.getBalance(account).then(balance => {
       setAccountBalance(formatEther(balance, 'ether'))
     })
 
-    if (contractAddress) {
+    if (contractAddress !== ZERO_ADDRESS) {
       library.getBalance(contractAddress).then(balance => {
         setContractBalance(formatEther(balance, 'ether'))
       })
@@ -34,11 +33,28 @@ const Header = () => {
         setOwner(o);
       })
     }
+  }
 
+  useEffect(() => {
+    if (library) {
+      refreshInfo()
+    }
   }, [contract, contractAddress, account])
 
+  useEffect(() => {
+    if (library) {
+      library.on('block', () => {
+        refreshInfo()
+      })
+    }
+
+    return () => {
+      library.removeAllListeners('block')
+    }
+  }, [])
+
   const handleCreateTrustClick = () => {
-    console.log('creating new contract...')
+    alert('Feature not available yet')
   }
 
   return <Box

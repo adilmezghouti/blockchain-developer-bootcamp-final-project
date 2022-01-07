@@ -11,8 +11,8 @@ import BenefitorRow from "./BenefitorRow";
 const GAS_AMOUNT = 3000000
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-const Benefitors= () => {
-  const {account} = useWeb3React()
+const Benefitors = () => {
+  const {account, library} = useWeb3React()
   const {contract} = useContract(FamilyTrustContract)
 
   const [error, setError] = useState()
@@ -20,25 +20,35 @@ const Benefitors= () => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [address, setAddress] = useState('')
-  const [isAddFundsEnabled, setisAddFundsEnabled] = useState(false)
+  const [isAddFundsEnabled, setIsAddFundsEnabled] = useState(false)
   const [isAddBenefitorEnabled, setIsAddBenefitorEnabled] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const toggleAddbenefitor = () => {
+  const toggleAddBenefitor = () => {
     setIsAddBenefitorEnabled(!isAddBenefitorEnabled)
   }
 
   const toggleAddFunds = () => {
-    setisAddFundsEnabled(!isAddFundsEnabled)
+    setIsAddFundsEnabled(!isAddFundsEnabled)
   }
 
   const handleCreateBenefitor = async () => {
+    setLoading(true)
     setError('')
     contract.methods.addBenefitor(address, firstName, lastName).send({from: account, gas: GAS_AMOUNT})
       .then(response => {
-      setFirstName('')
-      setLastName('')
-      setAddress('')
-    }).catch(err => {
+        setFirstName('')
+        setLastName('')
+        setAddress('')
+
+        library.once(response.transactionHash, (transaction) => {
+          contract.methods.getBenefitors().call().then(response => {
+            setBenefitors(response)
+            setLoading(false)
+          })
+        })
+      }).catch(err => {
+      setLoading(false)
       setError('Transaction Failed. Please try again!')
     })
   }
@@ -47,6 +57,21 @@ const Benefitors= () => {
     if (contract) {
       contract.methods.getBenefitors().call().then(response => setBenefitors(response))
     }
+
+
+    // library.on('block', () => {
+    //   //For simplicity we will only wait for one block
+    //   if (contract) {
+    //     contract.methods.getBenefitors().call().then(response => {
+    //       setBenefitors(response)
+    //       setLoading(false)
+    //     })
+    //   }
+    // })
+    //
+    // return () => {
+    //   library.removeAllListeners('block')
+    // }
   }, [contract])
 
   const handleFirstNameChange = (event) => {
@@ -63,7 +88,8 @@ const Benefitors= () => {
 
   return <div>
     <Box
-      sx={{ flexGrow: 1,
+      sx={{
+        flexGrow: 1,
         display: 'inline-flex',
         flexWrap: 'wrap',
         gap: '12px',
@@ -75,12 +101,13 @@ const Benefitors= () => {
         padding: '20px'
       }}
     >
-      <Button variant={'outlined'} size="small" onClick={toggleAddbenefitor} sx={{p: 1}}>Add Benefitor</Button>
+      <Button variant={'outlined'} size="small" onClick={toggleAddBenefitor} sx={{p: 1}}>Add Benefitor</Button>
       <Button variant={'outlined'} size="small" onClick={toggleAddFunds} sx={{p: 1}}>Add Funds</Button>
     </Box>
     {!!error && <div style={{color: '#e91e63', fontWeight: 'bold', marginBottom: 10}}>{error}</div>}
     {isAddBenefitorEnabled && <Box
-      sx={{ flexGrow: 1,
+      sx={{
+        flexGrow: 1,
         display: 'inline-flex',
         flexWrap: 'wrap',
         gap: '12px',
@@ -110,12 +137,16 @@ const Benefitors= () => {
         value={address}
         onChange={handleAddressChange}
       />
-      <Button variant={'outlined'} size="large" onClick={handleCreateBenefitor} style={{paddingBottom: '14px', paddingTop: '14px'}}>Submit</Button>
+      <Button variant={'outlined'} size="large" onClick={handleCreateBenefitor}
+              style={{paddingBottom: '14px', paddingTop: '14px'}}>{loading ? 'Processing...' : 'Submit'}</Button>
     </Box>}
 
-    {contract && contract !== ZERO_ADDRESS  ? Object.keys(benefitors)
-      .filter(key => key.startsWith('benefitor') )
-      .map(key => <Card key={key} variant="outlined" sx={{mb: 2}}> <BenefitorRow key={key} label={key} address={benefitors[key]} actionEnabled={isAddFundsEnabled} contract={contract} /></Card>) :
+    {contract && contract !== ZERO_ADDRESS ? Object.keys(benefitors)
+        .filter(key => key.startsWith('benefitor'))
+        .map(key => <Card key={key} variant="outlined" sx={{mb: 2}}> <BenefitorRow key={key} label={key}
+                                                                                   address={benefitors[key]}
+                                                                                   actionEnabled={isAddFundsEnabled}
+                                                                                   contract={contract}/></Card>) :
       <Typography variant="h6" color='#e91e63'>Make sure to create your Trust Fund first</Typography>
     }
   </div>

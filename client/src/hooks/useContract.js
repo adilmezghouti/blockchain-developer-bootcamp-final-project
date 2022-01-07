@@ -16,7 +16,7 @@ export function useContract(contractJson) {
 
     web3.eth.net.getId().then(networkId => {
       const _address = contractJson.networks[networkId]?.address;
-      console.log('--->', networkId, chainId, library.networkId)
+
       if (_address) {
         setAddress(_address)
         setInstance(new web3.eth.Contract(contractJson.abi, _address));
