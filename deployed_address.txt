@@ -1,2 +1,2 @@
-Network:
-Network address:
+Network: ropsten
+Network address: 0x1d16E3BfB62eaC9AFf39bBA84cc01F61c2f0558e

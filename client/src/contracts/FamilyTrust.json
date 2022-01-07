@@ -231,7 +231,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -250,7 +251,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -263,7 +265,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -301,7 +304,8 @@
       "name": "addFunds",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [
@@ -485,7 +489,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -498,7 +503,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -542,7 +548,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -570,7 +577,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -598,7 +606,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -627,7 +636,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"LogAdminAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"admin\",\"type\":\"address\"}],\"name\":\"LogAdminRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"benefitor\",\"type\":\"address\"}],\"name\":\"LogBenefitorAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"benefitor\",\"type\":\"address\"}],\"name\":\"LogBenefitorRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"bucket\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newBalance\",\"type\":\"uint256\"}],\"name\":\"LogFunded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"bucket\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LogFundsReleased\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"bucket\",\"type\":\"string\"}],\"name\":\"LogLocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"bucket\",\"type\":\"string\"}],\"name\":\"LogUnfunded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"bucket\",\"type\":\"string\"}],\"name\":\"LogUnlocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_firstName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_lastName\",\"type\":\"string\"}],\"name\":\"addAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_benefitor\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_firstName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_lastName\",\"type\":\"string\"}],\"name\":\"addBenefitor\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_benefitor\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_bucket\",\"type\":\"string\"}],\"name\":\"addFunds\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"admins\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"benefitors\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"getAccountInfo\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"firstName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"lastName\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"isAdmin\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"enabled\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"getAdminInfo\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"firstName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"lastName\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"enabled\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAdmins\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"admin1\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"admin2\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"admin3\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"len\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBenefitors\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"benefitor1\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"benefitor2\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"benefitor3\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"len\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_bucket\",\"type\":\"string\"}],\"name\":\"getBucketInfo\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"firstName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"lastName\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"enabled\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"balance\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"locked\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBucketTypes\",\"outputs\":[{\"internalType\":\"string[]\",\"name\":\"\",\"type\":\"string[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_bucket\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_benefitor\",\"type\":\"address\"}],\"name\":\"lockFunds\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_fromBucket\",\"type\":\"string\"}],\"name\":\"releaseFunds\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_admin\",\"type\":\"address\"}],\"name\":\"removeAdmin\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_benefitor\",\"type\":\"address\"}],\"name\":\"removeBenefitor\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_hasAccess\",\"type\":\"bool\"}],\"name\":\"toggleAccountAccess\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_bucket\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_benefitor\",\"type\":\"address\"}],\"name\":\"unlockFunds\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Adil Mezghouti\",\"kind\":\"dev\",\"methods\":{\"addAdmin(address,string,string)\":{\"params\":{\"_firstName\":\"first name of the user\",\"_lastName\":\"last name of the user\"}},\"addBenefitor(address,string,string)\":{\"params\":{\"_benefitor\":\"the account address\",\"_firstName\":\"the first name of the account/user\",\"_lastName\":\"the last name of the account/user\"}},\"addFunds(address,string)\":{\"params\":{\"_benefitor\":\"the address of the person who will be the recipient of the deposited funds\",\"_bucket\":\"the name of the bucket in which the funds will be deposited\"}},\"getAccountInfo(address)\":{\"params\":{\"_address\":\"the account address\"}},\"getAdminInfo(address)\":{\"params\":{\"_address\":\"the account address\"}},\"getBucketInfo(address,string)\":{\"params\":{\"_address\":\"the account address\",\"_bucket\":\"the bucket name\"}},\"lockFunds(string,address)\":{\"params\":{\"_benefitor\":\"the account that the bucket belongs to\",\"_bucket\":\"the bucket that will be locked\"}},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"releaseFunds(address,string)\":{\"params\":{\"_fromBucket\":\"the bucket to which the funds are associated\",\"_to\":\"the address receiving the funds\"}},\"removeAdmin(address)\":{\"params\":{\"_admin\":\"the address that will be disabled\"}},\"removeBenefitor(address)\":{\"params\":{\"_benefitor\":\"the account address\"}},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"toggleAccountAccess(address,bool)\":{\"params\":{\"_address\":\"the account address\",\"_hasAccess\":\"whether the access is enabled/disabled\"}},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"unlockFunds(string,address)\":{\"params\":{\"_benefitor\":\"the account that the bucket belongs to\",\"_bucket\":\"the bucket that will be unlocked\"}}},\"title\":\"Allows families to deposit, lock, unlock, and release funds for the benefit of their children.\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"addAdmin(address,string,string)\":{\"notice\":\"Adds an admin account\"},\"addBenefitor(address,string,string)\":{\"notice\":\"Adds a benefitor account\"},\"addFunds(address,string)\":{\"notice\":\"Adds funds to the smart contract and associate them to a specific bucketNote that the funds will be assigned logically through buckets and will not be effectively owned by the benefitor until the admin/owner releases the funds to her\"},\"getAccountInfo(address)\":{\"notice\":\"Returns account info for a given address\"},\"getAdminInfo(address)\":{\"notice\":\"Returns the admin info\"},\"getAdmins()\":{\"notice\":\"Returns the list of admins\"},\"getBenefitors()\":{\"notice\":\"Returns the list of benefitors\"},\"getBucketInfo(address,string)\":{\"notice\":\"Returns a bucket info\"},\"getBucketTypes()\":{\"notice\":\"returns the bucket types\"},\"lockFunds(string,address)\":{\"notice\":\"Lock funds\"},\"releaseFunds(address,string)\":{\"notice\":\"Moves the amount associated with a specific bucket to the provided address\"},\"removeAdmin(address)\":{\"notice\":\"Disables an account\"},\"removeBenefitor(address)\":{\"notice\":\"Deletes a benefitor account\"},\"toggleAccountAccess(address,bool)\":{\"notice\":\"Enables/Disables an account\"},\"unlockFunds(string,address)\":{\"notice\":\"Unlocks funds\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/FamilyTrust.sol\":\"FamilyTrust\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0xa1b27b3f44ff825974e5268e8f63ad3b03add5b464880d860fbb8cae043e17f7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ad0fb4425453220f15bdb8c4e009052839804bb725797b6d8c02ee2271bc3c23\",\"dweb:/ipfs/QmPtjdMxzEifPUEUa6cKX1yfTWjaZV6QtdwMdN6bEL9FBM\"]},\"@openzeppelin/contracts/security/ReentrancyGuard.sol\":{\"keccak256\":\"0x86ebc6cea2b539c2d4a79a4754f7c90c43c45c9aaf0aab32ecffb1565afc5e0b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1d8016f7e49bd65a14769d2c846a7e589603e51c4bf82da94315cc59f54fe2e4\",\"dweb:/ipfs/Qmd92BAbMLEbYYfRWwN1yqDTxEuguenmQ35YFbPh3KEFuP\"]},\"@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x7736c187e6f1358c1ea9350a2a21aa8528dec1c2f43b374a9067465a3a51f5d3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4fd625dca17657403af518cc6c8ab5c54c58898cf6e912ca2e1b0f3194ad0405\",\"dweb:/ipfs/QmQVv7YeeKmaS11bg7YDTeeGDk6i7sV8LMMfohaLM4SiRu\"]},\"project:/contracts/FamilyTrust.sol\":{\"keccak256\":\"0x16ae26b0ff4d5ba1a11e6c895a01a5002d18b1814f941ac8d6ee015cf5648a74\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a529a6c7709dd2e8370bffff41427b9f6f9483f401e469d420de066fe7785694\",\"dweb:/ipfs/QmNWV4G3E5ewnhSWnadVFJ7QeaxeufQEDVzAg36mB2RJJZ\"]}},\"version\":1}",
@@ -32981,10 +32991,23 @@
       "links": {},
       "address": "0x1d16E3BfB62eaC9AFf39bBA84cc01F61c2f0558e",
       "transactionHash": "0xd00bebc1e9760e873b83ff7f0124652e4a4c9dc09380b819841609249943499e"
+    },
+    "1641588520088": {
+      "events": {},
+      "links": {},
+      "address": "0x1d16E3BfB62eaC9AFf39bBA84cc01F61c2f0558e",
+      "transactionHash": "0x7162fc058a566b8591b9a72e32d8db8ed1b42ce572b37e5616bb911ee8d4cc2a"
+    },
+    "1641589199330": {
+      "events": {},
+      "links": {},
+      "address": "0x1d16E3BfB62eaC9AFf39bBA84cc01F61c2f0558e",
+      "transactionHash": "0x7162fc058a566b8591b9a72e32d8db8ed1b42ce572b37e5616bb911ee8d4cc2a"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2022-01-07T18:50:21.140Z",
+  "updatedAt": "2022-01-07T21:00:09.248Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "Adil Mezghouti",
     "kind": "dev",

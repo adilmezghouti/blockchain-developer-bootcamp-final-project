@@ -63,7 +63,7 @@ The battery of unit tests in place target the following pieces of functionality:
 
 ## See the dapp in action
 - The dapp is deployed to IPFS using Fleek. You can access it here: https://white-recipe-7476.on.fleek.co/
-- A screencast of you walking through your project
+- A screencast of you walking through your project: https://drive.google.com/file/d/10TDYrCag8O8taF5Ook0dTPUabv3XIOUX/view?usp=sharing 
 
 ## Public Ethereum account:
 - My address for the NFT certificate: 0xF35Efa0f39270358687f896487bdE4F90b5fC933
