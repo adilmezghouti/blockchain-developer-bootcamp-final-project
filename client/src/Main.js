@@ -6,7 +6,6 @@ import VerticalTabs from "./VerticalTabs";
 import {injected} from "./connectors";
 import useInactiveListener from "./hooks/useInactiveListener";
 import useEagerConnect from "./hooks/useEagerConnect";
-import Button from "@mui/material/";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
