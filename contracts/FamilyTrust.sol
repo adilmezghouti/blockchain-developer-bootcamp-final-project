@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-///@title Allows families to deposit, lock, unlock, and release funds for the benefits of their children.
+///@title Allows families to deposit, lock, unlock, and release funds for the benefit of their children.
 ///@author Adil Mezghouti
 contract FamilyTrust is Ownable, ReentrancyGuard {
   address[] public admins;
@@ -46,8 +46,8 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
   event LogFundsReleased(address to, string bucket, uint amount);
   event LogAdminAdded(address sender, address admin);
   event LogAdminRemoved(address sender, address admin);
-  event LogChildAdded(address sender, address child);
-  event LogChildRemoved(address sender, address child);
+  event LogBenefitorAdded(address sender, address benefitor);
+  event LogBenefitorRemoved(address sender, address benefitor);
 
   modifier onlyAdmins() {
     require(accounts[msg.sender].role == Role.ADMIN, "Only admins can call this");
@@ -97,14 +97,25 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     emit LogFundsReleased(_to, _fromBucket, oldBalance);
   }
 
+  ///@notice Lock funds
+  ///@param _bucket the bucket that will be locked
+  ///@param _benefitor the account that the bucket belongs to
   function lockFunds(string memory _bucket, address _benefitor) public onlyAdmins {
     buckets[_benefitor][_bucket].locked = true;
+    emit LogLocked(_benefitor, _bucket);
   }
 
+  ///@notice Unlocks funds
+  ///@param _bucket the bucket that will be unlocked
+  ///@param _benefitor the account that the bucket belongs to
   function unlockFunds(string memory _bucket, address _benefitor) public onlyAdmins {
     buckets[_benefitor][_bucket].locked = false;
+    emit LogUnlocked(_benefitor, _bucket);
   }
 
+  ///@notice Adds an admin account
+  ///@param _firstName first name of the user
+  ///@param _lastName last name of the user
   function addAdmin(address _admin, string memory _firstName, string memory _lastName) public onlyOwner {
     admins.push(_admin);
     accounts[_admin] = Account({
@@ -114,12 +125,20 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
       enabled: true,
       exists: true
     });
+    emit LogAdminAdded(msg.sender, _admin);
   }
 
+  ///@notice Disables an account
+  ///@param _admin the address that will be disabled
   function removeAdmin(address _admin) public onlyOwner {
     accounts[_admin].enabled = false;
+    emit LogAdminRemoved(msg.sender, _admin);
   }
 
+  ///@notice Adds a benefitor account
+  ///@param _benefitor the account address
+  ///@param _firstName the first name of the account/user
+  ///@param _lastName the last name of the account/user
   function addBenefitor(address _benefitor, string memory _firstName, string memory _lastName) public onlyAdmins returns(bool) {
     benefitors.push(_benefitor);
     accounts[_benefitor] = Account({
@@ -130,17 +149,26 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
       exists: true
     });
 
+    emit LogBenefitorAdded(msg.sender, _benefitor);
     return true;
   }
 
+  ///@notice Deletes a benefitor account
+  ///@param _benefitor the account address
   function removeBenefitor(address _benefitor) public onlyAdmins {
     delete accounts[_benefitor];
+    emit LogBenefitorRemoved(msg.sender, _benefitor);
   }
 
-  function toggleAccountAccess(address _address, bool hasAccess) public onlyOwner {
-    accounts[_address].enabled = hasAccess;
+  ///@notice Enables/Disables an account
+  ///@param _address the account address
+  ///@param _hasAccess whether the access is enabled/disabled
+  function toggleAccountAccess(address _address, bool _hasAccess) public onlyOwner {
+    accounts[_address].enabled = _hasAccess;
   }
 
+  ///@notice Returns account info for a given address
+  ///@param _address the account address
   function getAccountInfo(address _address) public view returns(
     string memory firstName,
     string memory lastName,
@@ -160,10 +188,14 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     );
   }
 
+  ///@notice returns the bucket types
   function getBucketTypes() public view returns(string[] memory) {
     return bucketTypes;
   }
 
+  ///@notice Returns a bucket info
+  ///@param _address the account address
+  ///@param _bucket the bucket name
   function getBucketInfo(address _address, string memory _bucket) public view returns(
     string memory firstName,
     string memory lastName,
@@ -186,6 +218,7 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     );
   }
 
+  ///@notice Returns the list of benefitors
   function getBenefitors() public view returns(
     address benefitor1,
     address benefitor2,
@@ -203,6 +236,7 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     );
   }
 
+  ///@notice Returns the list of admins
   function getAdmins() public view returns(
     address admin1,
     address admin2,
@@ -221,6 +255,8 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     );
   }
 
+  ///@notice Returns the admin info
+  ///@param _address the account address
   function getAdminInfo(address _address) public view returns(
     string memory firstName,
     string memory lastName,
