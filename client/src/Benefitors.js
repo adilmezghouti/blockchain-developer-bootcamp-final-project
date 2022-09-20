@@ -8,6 +8,7 @@ import FamilyTrustContract from "./contracts/FamilyTrust.json";
 import {Card, Typography} from "@mui/material";
 import BenefitorRow from "./BenefitorRow";
 
+
 const GAS_AMOUNT = 3000000
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -20,9 +21,12 @@ const Benefitors = () => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [address, setAddress] = useState('')
+  const [timestamp, setTimestamp] = useState(0)
   const [isAddFundsEnabled, setIsAddFundsEnabled] = useState(false)
   const [isAddBenefitorEnabled, setIsAddBenefitorEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
+
+
 
   const toggleAddBenefitor = () => {
     setIsAddBenefitorEnabled(!isAddBenefitorEnabled)
@@ -31,15 +35,22 @@ const Benefitors = () => {
   const toggleAddFunds = () => {
     setIsAddFundsEnabled(!isAddFundsEnabled)
   }
-
+  
   const handleCreateBenefitor = async () => {
     setLoading(true)
     setError('')
-    contract.methods.addBenefitor(address, firstName, lastName).send({from: account, gas: GAS_AMOUNT})
+    const date = new Date(timestamp);
+    var t = Date.parse(date);
+    console.log(t);
+    setTimestamp(t);
+    console.log(timestamp);
+    contract.methods.addBenefitor(address, firstName, lastName, t).send({from: account, gas: GAS_AMOUNT})
       .then(response => {
         setFirstName('')
         setLastName('')
         setAddress('')
+        
+        
 
         library.once(response.transactionHash, (transaction) => {
           contract.methods.getBenefitors().call().then(response => {
@@ -86,6 +97,10 @@ const Benefitors = () => {
     setAddress(event.target.value)
   }
 
+  const handleTimestampChange = (event) => {
+    setTimestamp(event.target.value);
+  }
+
   return <div>
     <Box
       sx={{
@@ -104,6 +119,7 @@ const Benefitors = () => {
       <Button variant={'outlined'} size="small" onClick={toggleAddBenefitor} sx={{p: 1}}>Add Benefitor</Button>
       <Button variant={'outlined'} size="small" onClick={toggleAddFunds} sx={{p: 1}}>Add Funds</Button>
     </Box>
+    
     {!!error && <div style={{color: '#e91e63', fontWeight: 'bold', marginBottom: 10}}>{error}</div>}
     {isAddBenefitorEnabled && <Box
       sx={{
@@ -136,6 +152,17 @@ const Benefitors = () => {
         label="Address"
         value={address}
         onChange={handleAddressChange}
+      />
+      <TextField
+        id="outlined-name"
+        label="Unlock Date"
+        type="date"
+        value={timestamp}
+        sx={{ width: 200 }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        onChange={handleTimestampChange}
       />
       <Button variant={'outlined'} size="large" onClick={handleCreateBenefitor}
               style={{paddingBottom: '14px', paddingTop: '14px'}}>{loading ? 'Processing...' : 'Submit'}</Button>

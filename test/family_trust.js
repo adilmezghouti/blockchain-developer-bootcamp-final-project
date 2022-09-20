@@ -1,5 +1,10 @@
 const FamilyTrust = artifacts.require("FamilyTrust");
+const Transactions = artifacts.require("Transactions");
 let BN = web3.utils.BN;
+
+module.exports = function(deployer){
+  deployer.deploy(Transactions);
+};
 
 contract("FamilyTrust", function (accounts) {
   const [_owner, alice, bob] = accounts;
@@ -24,13 +29,13 @@ contract("FamilyTrust", function (accounts) {
     })
 
     it('should have a benefitor', async () => {
-      await instance.addBenefitor(alice, 'alice', 'foo');
+      await instance.addBenefitor(alice, 'alice', 'foo',13000);
       const account = await instance.getAccountInfo(alice);
       return assert.isTrue(account.firstName === 'alice' && !account.isAdmin, 'The contract is missing a benefitor');
     })
 
     it('should have a populated benefitors array', async () => {
-      await instance.addBenefitor(alice, 'alice', 'foo');
+      await instance.addBenefitor(alice, 'alice', 'foo',13000);
       const benefitors = await instance.getBenefitors();
       return assert.isTrue(benefitors.len.toString() === '1', 'The contract is missing a benefitor');
     })
@@ -47,15 +52,17 @@ contract("FamilyTrust", function (accounts) {
     })
 
     it('should have a positive balance', async () => {
-      await instance.addBenefitor(bob, 'bob', 'foo');
+      await instance.addBenefitor(bob, 'bob', 'foo',13000);
       await instance.addFunds(bob, 'UNIVERSITY', { from: _owner, value: 10 });
       const bucketInfo = await instance.getBucketInfo(bob, 'UNIVERSITY');
       return assert.isTrue(bucketInfo.balance.toString() === '10', 'Benefitor is missing some money in her bucket');
     })
 
+
     it('should release funds', async () => {
-      await instance.addBenefitor(bob, 'bob', 'foo');
+      await instance.addBenefitor(bob, 'bob', 'foo',1);
       await instance.addFunds(bob, 'UNIVERSITY', { from: _owner, value: 10 });
+
       const bobBalanceBefore = await web3.eth.getBalance(bob);
       await instance.releaseFunds(bob, 'UNIVERSITY');
       const bucketInfo = await instance.getBucketInfo(bob, 'UNIVERSITY');
@@ -63,6 +70,12 @@ contract("FamilyTrust", function (accounts) {
       return assert.isTrue(bucketInfo.balance.toString() === '0' && new BN(bobBalanceAfter).sub(new BN(bobBalanceBefore)).toString() === '10', 'Benefitor should have 0 balance in the university bucket and 10 in the actual address');
     })
   })
+  it("should add to transactions list", async() => {
+    await instance.addToBlockchain(alice,'alice', 1, 1000000000);
+    const transactions = await instance.getAllTransactions();
+    return assert.isTrue(transactions.length == 1 , "failed to add transactions")
+  });
 
 
 });
+

@@ -9,6 +9,9 @@ import Button from "@mui/material/Button";
 import {Lock, LockOpen} from "@mui/icons-material";
 import AddressBlock from "./AddressBlock";
 
+
+
+
 const GAS_AMOUNT = 3000000
 const BucketMetaData = {
   UNIVERSITY: {
@@ -36,6 +39,10 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
   const [selectedBucket, setSelectedBucket] = useState("UNIVERSITY")
   const [areFundsLocked, setAreFundsLocked] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [unlockDate, setUnlockDate] = useState(0)
+
+
+
 
   const toggleAccountAccess = async (_address, hasAccess) => {
     const {status} = await contract.methods.toggleAccountAccess(_address, hasAccess).send({from: account, gas: GAS_AMOUNT});
@@ -53,11 +60,53 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
     } else {
       library.once(response.transactionHash, () => {
         //For simplicity we will only wait for one block
-        getBuckets().then(() => {
-          setLoading(false)
+        getBuckets().then(async () => {
+          //setLoading(false)
+          const {firstName, lastName, timestamp} = await contract.methods.getAccountInfo(address).call();
+          console.log(firstName);
+          console.log(lastName);
+          console.log(timestamp);
+          console.log(address);
+          console.log(amount);
+          setName(`${firstName} ${lastName}`);
+          setUnlockDate(timestamp);
+          console.log(name);
+          console.log(unlockDate);
+          
+          await contract.methods.addToBlockchain(address, name, Web3.utils.toWei(amount, "ether"), unlockDate ).send({from: account, gas: GAS_AMOUNT})
+
+          const availableTransactions = await contract?.methods?.getAllTransactions().call();
+          console.log(availableTransactions);
+
+
+        //Dans le code qui suit, on utilise un tableau d'objets pour créer un autre tableau contenant de nouveaux objets dans un autre format :
+        //a l'aide de la fonction map 
+        
+        const structuredTransactions = availableTransactions.map((transaction) => ({
+          TransactionID: transaction.TransactID,
+          addressFrom: transaction.sender,
+          addressTo: transaction.receiver,
+          receiverFullName: transaction.receiverFullName,
+          amount: transaction.amount / 1000000000000000000,
+          timestamp: transaction.timestamp,
+          unlockDate: transaction.unlockDate
+        }));
+        console.log(structuredTransactions);
+        
+          setLoading(false);
+      
+          const transactionsCount = await contract.methods.getTransactionCount().call();
+          console.log((transactionsCount))
+          console.log('done');
+          
+
         })
       })
-      setAmount(0)
+
+
+
+
+
     }
   }
 
@@ -73,9 +122,10 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
     const buckets = []
     let total = Web3.utils.toBN(0)
 
-    const {firstName, lastName, enabled: _enabled} = await contract.methods.getAccountInfo(address).call();
+    const {firstName, lastName, enabled: _enabled, timestamp} = await contract.methods.getAccountInfo(address).call();
     setName(`${firstName} ${lastName}`)
     setEnabled(_enabled)
+    setUnlockDate(timestamp)
 
     for (const bucket of ['UNIVERSITY', 'ALLOWANCES', 'INHERITANCE']) {
       const {balance, locked} = await contract.methods.getBucketInfo(address, bucket).call()
@@ -97,6 +147,8 @@ const BenefitorRow = ({contract, address, actionEnabled}) => {
     getBuckets()
   }, [address, contract])
 
+  
+  
   return <Fragment>
     {!!error && <div style={{color: '#e91e63', fontWeight: 'bold', marginBottom: 10}}>{error}</div>}
     <CardContent sx={{display: 'flex', flexDirection: 'column', gap: '15px'}}>

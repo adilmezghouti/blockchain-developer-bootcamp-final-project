@@ -2,7 +2,7 @@
 pragma solidity ^0.8.10;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 ///@title Allows families to deposit, lock, unlock, and release funds for the benefit of their children.
@@ -10,6 +10,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract FamilyTrust is Ownable, ReentrancyGuard {
   address[] public admins;
   address[] public benefitors;
+
   enum Role {
     ADMIN,
     USER
@@ -25,9 +26,13 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     Role role;
     bool enabled;
     bool exists;
+    uint256 timestamp;
   }
-  mapping(address => Account) accounts;
-  mapping(address => mapping(string => Bucket)) buckets;
+  
+
+
+    mapping(address => Account) accounts ;
+    mapping(address => mapping(string => Bucket)) buckets;
 
   constructor() {
     benefitors = new address[](0);
@@ -39,6 +44,8 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     ];
   }
 
+  //*******************EVENTS***********************
+
   event LogLocked(address _address, string bucket);
   event LogUnlocked(address _address, string bucket);
   event LogFunded(address sender, address receiver, string bucket, uint newBalance);
@@ -49,17 +56,24 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
   event LogBenefitorAdded(address sender, address benefitor);
   event LogBenefitorRemoved(address sender, address benefitor);
 
-  modifier onlyAdmins() {
-    require(accounts[msg.sender].role == Role.ADMIN, "Only admins can call this");
-    _;
+  //*******************MODIFIERS********************
+
+
+  modifier onlyAdmins(){
+      require(accounts[msg.sender].role == Role.ADMIN, "function reserved to ADMINS only");
+      _;
+  }
+  modifier onlyBenefitors(){
+      require(accounts[msg.sender].role == Role.ADMIN, "function reserved to BENEFITORS only");
+      _;
   }
 
-  modifier onlyBenefitors() {
-    require(accounts[msg.sender].role == Role.USER, "Only benefitors can call this");
-    _;
+  modifier timeStampReached(address _address){
+      require(accounts[_address].timestamp <= block.timestamp, "it's to soon to use your funds");
+      _;
   }
 
-  modifier enoughFunds(address _address, string memory _bucket) {
+    modifier enoughFunds(address _address, string memory _bucket) {
     require(buckets[_address][_bucket].balance > 0, "Balance is not enough");
     _;
   }
@@ -74,6 +88,8 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     _;
   }
 
+  //********************FUNCTIONS***********************
+
   ///@notice Adds funds to the smart contract and associate them to a specific bucket
   ///@param _benefitor the address of the person who will be the recipient of the deposited funds
   ///@param _bucket the name of the bucket in which the funds will be deposited
@@ -86,10 +102,10 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     emit LogFunded(msg.sender, _benefitor, _bucket, buckets[_benefitor][_bucket].balance);
   }
 
-  ///@notice Moves the amount associated with a specific bucket to the provided address
+    ///@notice Moves the amount associated with a specific bucket to the provided address
   ///@param _to the address receiving the funds
   ///@param _fromBucket the bucket to which the funds are associated
-  function releaseFunds(address payable _to, string memory _fromBucket) public onlyAdmins existingAccount(_to) enoughFunds(_to, _fromBucket) nonReentrant {
+  function releaseFunds(address payable _to, string memory _fromBucket) public onlyAdmins existingAccount(_to) enoughFunds(_to, _fromBucket) nonReentrant timeStampReached(_to){
     uint oldBalance = buckets[_to][_fromBucket].balance;
     buckets[_to][_fromBucket].balance = 0;
     (bool success, ) = _to.call{value: oldBalance}("");
@@ -97,7 +113,7 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     emit LogFundsReleased(_to, _fromBucket, oldBalance);
   }
 
-  ///@notice Lock funds
+    ///@notice Lock funds
   ///@param _bucket the bucket that will be locked
   ///@param _benefitor the account that the bucket belongs to
   function lockFunds(string memory _bucket, address _benefitor) public onlyAdmins {
@@ -113,7 +129,7 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     emit LogUnlocked(_benefitor, _bucket);
   }
 
-  ///@notice Adds an admin account
+    ///@notice Adds an admin account
   ///@param _firstName first name of the user
   ///@param _lastName last name of the user
   function addAdmin(address _admin, string memory _firstName, string memory _lastName) public onlyOwner {
@@ -123,37 +139,39 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
       lastName: _lastName,
       role: Role.ADMIN,
       enabled: true,
-      exists: true
+      exists: true,
+      timestamp: 0
     });
     emit LogAdminAdded(msg.sender, _admin);
   }
 
-  ///@notice Disables an account
+    ///@notice Disables an account
   ///@param _admin the address that will be disabled
   function removeAdmin(address _admin) public onlyOwner {
     accounts[_admin].enabled = false;
     emit LogAdminRemoved(msg.sender, _admin);
   }
 
-  ///@notice Adds a benefitor account
+    ///@notice Adds a benefitor account
   ///@param _benefitor the account address
   ///@param _firstName the first name of the account/user
   ///@param _lastName the last name of the account/user
-  function addBenefitor(address _benefitor, string memory _firstName, string memory _lastName) public onlyAdmins returns(bool) {
+  function addBenefitor(address _benefitor, string memory _firstName, string memory _lastName, uint256 _timestamp) public onlyAdmins returns(bool) {
     benefitors.push(_benefitor);
     accounts[_benefitor] = Account({
       firstName: _firstName,
       lastName: _lastName,
       role: Role.USER,
       enabled: true,
-      exists: true
+      exists: true,
+      timestamp: _timestamp
     });
 
     emit LogBenefitorAdded(msg.sender, _benefitor);
     return true;
   }
 
-  ///@notice Deletes a benefitor account
+    ///@notice Deletes a benefitor account
   ///@param _benefitor the account address
   function removeBenefitor(address _benefitor) public onlyAdmins {
     delete accounts[_benefitor];
@@ -173,18 +191,21 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
     string memory firstName,
     string memory lastName,
     bool isAdmin,
-    bool enabled
+    bool enabled,
+    uint256 timestamp
     ) {
     firstName = accounts[_address].firstName;
     lastName = accounts[_address].lastName;
     isAdmin = accounts[_address].role == Role.ADMIN;
     enabled = accounts[_address].enabled;
+    timestamp = accounts[_address].timestamp;
 
     return (
       firstName,
       lastName,
       isAdmin,
-      enabled
+      enabled,
+      timestamp
     );
   }
 
@@ -217,8 +238,7 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
       locked
     );
   }
-
-  ///@notice Returns the list of benefitors
+    ///@notice Returns the list of benefitors
   function getBenefitors() public view returns(
     address benefitor1,
     address benefitor2,
@@ -272,4 +292,74 @@ contract FamilyTrust is Ownable, ReentrancyGuard {
       enabled
     );
   }
+
+  function getTimestamp() public view returns(uint256)
+    {
+        return block.timestamp;
+    }
+
+// History of Transactions Tools
+
+ uint256 transactionCount ;
+
+    event Transfer(address from, address receiver, string reveiverName, uint amount, uint256 timestamp, uint256 uD);
+  
+    struct TransferStruct {
+        uint TransactID;
+        address sender;
+        address receiver;
+        string receiverFullName;
+        uint amount;
+        uint256 timestamp;
+        uint256 unlockdate;
+    }
+
+    TransferStruct[] public transactions;
+
+    mapping(uint256 => TransferStruct) transact ;
+
+
+    function addToBlockchain(address payable receiver, string memory receiverFullname, uint amount, uint256 uD) public {
+        transactionCount += 1;
+        transactions.push(TransferStruct(transactionCount ,msg.sender, receiver, receiverFullname ,amount, block.timestamp, uD ));
+
+        emit Transfer(msg.sender, receiver, receiverFullname, amount, block.timestamp,uD );
+    }
+    
+    function getAllTransactions() public view returns (TransferStruct[] memory) {
+        return transactions;
+    }
+
+    function getTransactionInfo(uint256  transCount) public view returns(
+        uint transactID,
+        address sender,
+        address receiver,
+        string memory receiverFullName,
+        uint amount,
+        uint256 timestamp,
+        uint256 unlockDate )
+        {
+            transactID = transact[transCount].TransactID ;
+            sender = transact[transCount].sender;
+            receiver = transact[transCount].receiver;
+            receiverFullName = transact[transCount].receiverFullName;
+            amount = transact[transCount].amount;
+            timestamp = transact[transCount].timestamp;
+            unlockDate = transact[transCount].unlockdate;
+
+            return (
+                transactID,
+                sender,
+                receiver,
+                receiverFullName,
+                amount,
+                timestamp,
+                unlockDate
+            );
+    }
+
+    function getTransactionCount() public view returns (uint256) {
+        return transactionCount;
+    }
+
 }

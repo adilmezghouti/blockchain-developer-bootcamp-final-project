@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@mui/x-data-grid": "^5.17.3",
+    "@mui/x-date-pickers": "^5.0.0-beta.6",
+    "@openzeppelin/contracts": "^4.7.3",
+    "dayjs": "^1.11.5",
+    "moment": "^2.29.4"
+  }
+}

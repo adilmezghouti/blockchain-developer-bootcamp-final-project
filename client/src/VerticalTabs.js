@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Admins from './Admins';
 import Benefitors from './Benefitors';
+import Transactions from './Transactions';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,6 +61,7 @@ export default function VerticalTabs() {
       >
         <Tab label="Benefitors" {...a11yProps(0)} />
         <Tab label="Admins" {...a11yProps(1)} />
+        <Tab label="Transactions History" {...a11yProps(2)}/>
       </Tabs>
       <TabPanel value={value} index={0}>
         <Benefitors />
@@ -67,6 +69,10 @@ export default function VerticalTabs() {
       <TabPanel value={value} index={1}>
         <Admins />
       </TabPanel>
+      <TabPanel value={value} index={2}>
+        <Transactions/>
+      </TabPanel>
+      
     </Box>
   );
 }
